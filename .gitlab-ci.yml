@@ -1,0 +1,23 @@
+Continuous Build:
+  stage: build
+  tags:
+    - Common Runner
+  script:
+    - git clone "https://github.com/venkatbanda9/MyJavaApp.git"
+    - cd MyJavaApp;mvn package
+    - cp /home/gitlab-runner/YonzQhzB/0/venkatbanda9/my-first-project/MyJavaApp/webapp/target/webapp.war /home/gitlab-runner/
+Continuous Test:
+  stage: test
+  tags:
+    - Common Runner
+  script:
+    - scp /home/gitlab-runner/webapp.war  ubuntu@172.31.34.244:/var/lib/tomcat9/webapps/test.war
+    - git clone "https://github.com/intelliqittrainings/FunctionalTesting.git"
+    - java -jar /home/gitlab-runner/YonzQhzB/0/venkatbanda9/my-first-project/FunctionalTesting/testing.jar
+Continuous Deploy:
+  stage: deploy
+  tags:
+    - Common Runner
+  script:
+    - scp /home/gitlab-runner/webapp.war  ubuntu@172.31.44.28:/var/lib/tomcat9/webapps/prodapp.war
+
