@@ -1,0 +1,28 @@
+---
+image: intelliqit/ubuntu_gitlab
+
+stages:
+ - download_build
+ - deploy
+ - test
+ - delivery
+continuous downlaod and build:
+ stage: download_build
+ script: git clone https://gitlab.com/intelliq/maven.git
+ script: mvn package
+ artifacts:
+  paths: 
+   - /builds/intelliq/maven/webapp/target/webapp.war
+
+continuous deployment:
+ stage: deploy
+ script: scp /builds/intelliq/maven/webapp/target/webapp.war ubuntu@3.101.149.232:/var/lib/tomcat9/webapps/testwebapp.war
+
+continuous testing:
+ stage: test
+ script: git clone https://gitlab.com/intelliq/FunctionalTesting.git
+ script: java -jar /FunctionalTesting1/testing.jar
+
+continuous delivery:
+ stage: delivery
+ script: scp /builds/intelliq/maven/webapp/target/webapp.war ubuntu@54.176.61.145:/var/lib/tomcat9/webapps/prodwebapp.war
